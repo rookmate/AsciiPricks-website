@@ -7,7 +7,7 @@
 .main {
   width: 100%;
   max-width: 600px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(221, 221, 221, 0.3);
   backdrop-filter: blur(10px);
   border-radius: 1rem;
   box-shadow: 0.25em 0.25rem 1rem rgba(0, 0, 0, 0.15);
@@ -29,6 +29,7 @@
 .price {
   font-size: 1rem;
   line-height: 1.4em;
+  color: rgba(255, 255, 255, 1);
 }
 .status {
   font-weight: 700;
@@ -48,6 +49,7 @@
 }
 .error {
   font-size: 0.9rem;
+  font-weight: 400;
   line-height: 1.4rem;
   color: rgba(255, 0, 0, 1);
 }
