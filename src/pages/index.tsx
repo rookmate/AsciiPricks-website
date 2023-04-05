@@ -21,7 +21,7 @@ const PRICE = 0.001;
 
 const Home: NextPage = () => {
   const [isConnected, setIsConnected] = useState(false);
-  const [quantity, setQuantity] = useState<number>(3);
+  const [quantity, setQuantity] = useState<number>(1);
 
   const { address } = useAccount();
 
@@ -150,7 +150,7 @@ const Home: NextPage = () => {
                     <div className={styles.error}>
                       An error occurred while preparing the transaction. Make
                       sure that you have enough funds and that you haven’t
-                      reached your limit of 100 tokens.
+                      reached your limit of 10 tokens.
                     </div>
                   )}
                   {mintError && (
