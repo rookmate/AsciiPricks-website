@@ -86,7 +86,7 @@ const Home: NextPage = () => {
       <div className={styles.container}>
         <div className={styles.main}>
           <div className={styles.logoContainer}>
-            <Image src="/img/logo.svg" alt="ASCII PRICKS logo" layout="fill" />
+            <Image src="/img/logo.png" alt="ASCII PRICKS logo" layout="fill" />
           </div>
           <ConnectButton showBalance={false} />
           {isConnected && (
