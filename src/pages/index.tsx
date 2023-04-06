@@ -110,7 +110,7 @@ const Home: NextPage = () => {
                     You are about to mint <strong>{quantity}</strong> ASCII PRICKS NFT{quantity > 1 && "s"}. Move the slider below to adjust the quantity.
                   </div>
                   <Slider
-                    color="secondary"
+                    style={{ color: '#e33e81' }}
                     value={quantity}
                     onChange={handleChange}
                     aria-label="Quantity"
@@ -122,7 +122,7 @@ const Home: NextPage = () => {
                   />
                   <Button
                     variant="contained"
-                    color="secondary"
+                    style={{ backgroundColor: '#e33e81' }}
                     size="large"
                     onClick={() => {
                       write?.();
