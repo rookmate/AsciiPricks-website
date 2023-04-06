@@ -69,14 +69,14 @@ const Home: NextPage = () => {
         <title>ASCII PRICKS</title>
         <meta
           name="description"
-          content="Because your wallet deserves a dick to fend off on the Ethereum blockchain. No utility. No roadmap."
+          content="You ever wanted to know if you got the biggest dickus on the internet?  Now is your chance show the world what you got!  Your wallet deserves an untouchable dick to fend off the Ethereum blockchain.  No real utility other than boasting you have the longest, most rare or colorful dick in Ethereum. Is it the smallest? Weird flex but ok.  No roadmap."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://localhost:3000" />
         <meta property="og:title" content="ASCII PRICKS" />
         <meta
           property="og:description"
-          content="Because your wallet deserves a dick to fend off on the Ethereum blockchain. No utility. No roadmap."
+          content="You ever wanted to know if you got the biggest dickus on the internet?  Now is your chance show the world what you got!  Your wallet deserves an untouchable dick to fend off the Ethereum blockchain.  No real utility other than boasting you have the longest, most rare or colorful dick in Ethereum. Is it the smallest? Weird flex but ok.  No roadmap."
         />
         <meta
           property="og:image"
