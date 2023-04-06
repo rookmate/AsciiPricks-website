@@ -26,7 +26,7 @@ const Home: NextPage = () => {
   const { address } = useAccount();
 
   const { config, error: contractError } = usePrepareContractWrite({
-    addressOrName: "0x3306cAeCc1d90a38263C23dE0055CE36A004901c",
+    addressOrName: "0x2BCDFD3B591C7A171Ee71E5B1B63cc43AB0b724f",
     contractInterface: contractInterface,
     functionName: "mint",
     args: [quantity],
