@@ -17,7 +17,8 @@ import styles from "./index.module.css";
 import contractInterface from "abi/contract-abi.json";
 import { success } from "helpers/effects";
 
-const PRICE = 0.001;
+const PRICE = 0;
+const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
 
 const Home: NextPage = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -26,7 +27,7 @@ const Home: NextPage = () => {
   const { address } = useAccount();
 
   const { config, error: contractError } = usePrepareContractWrite({
-    addressOrName: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    addressOrName: contractAddress,
     contractInterface: contractInterface,
     functionName: "mint",
     args: [quantity],
