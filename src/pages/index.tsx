@@ -9,6 +9,7 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useContractRead,
 } from "wagmi";
 import Button from "@mui/material/Button";
 import Slider from "@mui/material/Slider";
@@ -25,6 +26,13 @@ const Home: NextPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
 
   const { address } = useAccount();
+
+  const { error: saleIsActive } = useContractRead({
+    addressOrName: contractAddress,
+    contractInterface: contractInterface,
+    functionName: "saleIsActive",
+    args: [],
+  });
 
   const { config, error: contractError } = usePrepareContractWrite({
     addressOrName: contractAddress,
@@ -158,6 +166,12 @@ const Home: NextPage = () => {
                     <div className={styles.error}>
                       An error occurred while accessing your wallet or
                       processing the transaction.
+                    </div>
+                  )}
+                  {!saleIsActive && (
+                    <div className={styles.error}>
+                      Public Sale is not yet active. If you are not allowlisted
+                      please wait for your turn to mint.
                     </div>
                   )}
                 </>
