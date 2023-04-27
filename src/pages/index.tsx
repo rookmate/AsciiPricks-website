@@ -21,7 +21,7 @@ import { success } from "helpers/effects";
 const PRICE = 0;
 const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
 
-const Home: NextPage = () => {
+function Home () {
   const [isConnected, setIsConnected] = useState(false);
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -73,30 +73,10 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>ASCII PRICKS</title>
-        <meta
-          name="description"
-          content="You ever wanted to know if you got the biggest dickus on the internet?  Now is your chance show the world what you got!  Your wallet deserves an untouchable dick to fend off the Ethereum blockchain.  No real utility other than boasting you have the longest, most rare or colorful dick in Ethereum. Is it the smallest? Weird flex but ok.  No roadmap."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://localhost:3000" />
-        <meta property="og:title" content="ASCII PRICKS" />
-        <meta
-          property="og:description"
-          content="You ever wanted to know if you got the biggest dickus on the internet?  Now is your chance show the world what you got!  Your wallet deserves an untouchable dick to fend off the Ethereum blockchain.  No real utility other than boasting you have the longest, most rare or colorful dick in Ethereum. Is it the smallest? Weird flex but ok.  No roadmap."
-        />
-        <meta
-          property="og:image"
-          content="https://localhost:3000/img/sample.png"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <MetaTags />
       <div className={styles.container}>
         <div className={styles.main}>
-          <div className={styles.logoContainer}>
-            <Image src="/img/logo.png" alt="ASCII PRICKS logo" layout="fill" />
-          </div>
+          <Logo />
           <ConnectButton showBalance={false} />
           {isConnected && (
             <>
@@ -185,3 +165,35 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+function MetaTags() {
+  return (
+    <Head>
+      <title>ASCII PRICKS</title>
+      <meta
+        name="description"
+        content="You ever wanted to know if you got the biggest dickus on the internet?  Now is your chance show the world what you got!  Your wallet deserves an untouchable dick to fend off the Ethereum blockchain.  No real utility other than boasting you have the longest, most rare or colorful dick in Ethereum. Is it the smallest? Weird flex but ok.  No roadmap."
+      />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://localhost:3000" />
+      <meta property="og:title" content="ASCII PRICKS" />
+      <meta
+        property="og:description"
+        content="You ever wanted to know if you got the biggest dickus on the internet?  Now is your chance show the world what you got!  Your wallet deserves an untouchable dick to fend off the Ethereum blockchain.  No real utility other than boasting you have the longest, most rare or colorful dick in Ethereum. Is it the smallest? Weird flex but ok.  No roadmap."
+      />
+      <meta
+        property="og:image"
+        content="https://localhost:3000/img/sample.png"
+      />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
+  );
+}
+
+function Logo() {
+  return (
+    <div className={styles.logoContainer}>
+      <Image src="/img/logo.png" alt="ASCII PRICKS logo" layout="fill" />
+    </div>
+  );
+}
