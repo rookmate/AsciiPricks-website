@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import type { NextPage } from "next";
 import Image from "next/image";
 import Head from "next/head";
 import { ethers } from "ethers";
@@ -28,15 +27,15 @@ function Home () {
   const { address } = useAccount();
 
   const { error: saleIsActive } = useContractRead({
-    addressOrName: contractAddress,
-    contractInterface: contractInterface,
+    address: `0x${contractAddress.substring(2)}`,
+    abi: contractInterface,
     functionName: "saleIsActive",
     args: [],
   });
 
   const { config, error: contractError } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: contractInterface,
+    address: `0x${contractAddress.substring(2)}`,
+    abi: contractInterface,
     functionName: "mint",
     args: [quantity],
     overrides: {
