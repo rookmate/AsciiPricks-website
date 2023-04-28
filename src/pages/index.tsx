@@ -14,8 +14,9 @@ import Button from "@mui/material/Button";
 import Slider from "@mui/material/Slider";
 
 import styles from "./index.module.css";
-import contractInterface from "abi/contract-abi.json";
+import contractABI from "abi/contract-abi.json";
 import { success } from "helpers/effects";
+import { useIsMounted } from "./hooks/useIsMounted";
 
 const PRICE = 0;
 const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
@@ -28,14 +29,14 @@ function Home () {
 
   const { error: saleIsActive } = useContractRead({
     address: `0x${contractAddress.substring(2)}`,
-    abi: contractInterface,
+    abi: contractABI,
     functionName: "saleIsActive",
     args: [],
   });
 
   const { config, error: contractError } = usePrepareContractWrite({
     address: `0x${contractAddress.substring(2)}`,
-    abi: contractInterface,
+    abi: contractABI,
     functionName: "mint",
     args: [quantity],
     overrides: {
@@ -76,7 +77,8 @@ function Home () {
       <div className={styles.container}>
         <div className={styles.main}>
           <Logo />
-          <ConnectButton showBalance={false} />
+          <MainContent />
+          {/* <ConnectButton showBalance={false} />
           {isConnected && (
             <>
               {isMinted ? (
@@ -156,7 +158,7 @@ function Home () {
                 </>
               )}
             </>
-          )}
+          )} */}
         </div>
       </div>
     </>
@@ -195,4 +197,43 @@ function Logo() {
       <Image src="/img/logo.png" alt="ASCII PRICKS logo" layout="fill" />
     </div>
   );
+}
+
+
+function MainContent() {
+  const mounted = useIsMounted();
+  const { isConnected } = useAccount();
+
+  return (
+    <>
+      <ConnectButton showBalance={false} />
+      <h1>{
+      mounted ? 
+        isConnected ? 
+          <CheckSaleStatus />
+        : 
+          null
+      :
+        null
+      }</h1>
+    </>
+  );
+}
+
+function CheckSaleStatus() {
+  const { data: saleIsActive, isError, isLoading, error } = useContractRead({
+    address: `0x${contractAddress.substring(2)}`,
+    abi: contractABI,
+    functionName: 'saleIsActive',
+  });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>Error loading sale status: {error ? error.message : ""}</p>;
+  }
+
+  return saleIsActive ? <p>Sale is active</p> : <p>Sale is not active</p>;
 }
