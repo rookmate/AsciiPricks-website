@@ -88,7 +88,7 @@ function MainContent() {
           canMint ?
             isSaleActive ?
               <div className={styles.action}>
-                <Mint canMint={canMint} address={address} />
+                <Mint canMint={canMint} address={address} funcName="mint"/>
               </div>
             :
               <div className={styles.action}>
@@ -117,15 +117,16 @@ function MainContent() {
 interface MintProps {
   canMint: number | JSX.Element;
   address?: string;
+  funcName?: "mint";
 }
 
-function Mint({ canMint, address }: MintProps) {
+function Mint({ canMint, address, funcName }: MintProps) {
   const [quantity, setQuantity] = useState<number>(1);
 
   const { config } = usePrepareContractWrite({
     address: `0x${contractAddress.substring(2)}`,
     abi: contractABI,
-    functionName: "mint",
+    functionName: funcName,
     args: [quantity],
     overrides: {
       from: `0x${address?.substring(2)}`,
