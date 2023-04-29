@@ -19,6 +19,7 @@ import { success } from "helpers/effects";
 import { useIsMounted } from "./hooks/useIsMounted";
 import { useSaleStatus } from "./hooks/useSaleStatus";
 import { useMint } from "./hooks/useMint";
+import { relative } from "path";
 
 const PRICE = 0;
 const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
@@ -191,7 +192,7 @@ function Logo() {
 
 function MainContent() {
   const mounted = useIsMounted();
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useAccount() ?? { isConnected: false, address: undefined };
   const isSaleActive = useSaleStatus({ contractAddress, contractABI });
   const canMint = useMint({ contractAddress, contractABI, address });
 
@@ -204,7 +205,7 @@ function MainContent() {
           canMint ?
             isSaleActive ?
               <div className={styles.action}>
-                Public Sale is active
+                <Mint canMint={canMint} address={address} />
               </div>
             :
               <div className={styles.action}>
@@ -226,6 +227,120 @@ function MainContent() {
       :
         null
       }</div>
+    </>
+  );
+}
+
+interface MintProps {
+  canMint: number | JSX.Element;
+  address?: string;
+}
+
+function Mint({ canMint, address }: MintProps) {
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const { config } = usePrepareContractWrite({
+    address: `0x${contractAddress.substring(2)}`,
+    abi: contractABI,
+    functionName: "mint",
+    args: [quantity],
+    overrides: {
+      from: `0x${address?.substring(2)}`,
+      value: ethers.utils.parseEther((0).toString()),
+    },
+  });
+
+  const {
+    isLoading,
+    isSuccess: isStarted,
+    error: mintError,
+    data: mintData,
+    write,
+  } = useContractWrite(config);
+
+  const { isSuccess: isMinted } = useWaitForTransaction({
+    hash: mintData?.hash,
+  });
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setQuantity(newValue as number);
+  };
+
+  useEffect(() => {
+    if (isMinted) {
+      success();
+    }
+  }, [isMinted]);
+
+  return (
+    <>
+      <div className={styles.price}>
+        You are about to mint <strong>{quantity}</strong> ASCII PRICKS NFT{quantity > 1 && "s"}. Move the slider below to adjust the quantity.
+      </div>
+      <Slider
+        style={{ color: '#e33e81' }}
+        value={quantity}
+        onChange={handleChange}
+        aria-label="Quantity"
+        valueLabelDisplay="auto"
+        step={1}
+        min={1}
+        max={typeof canMint === 'number' ? canMint : undefined}
+        disabled={(isLoading || isStarted) && !isMinted}
+      />
+      <Button
+        variant="contained"
+        style={{ 
+          backgroundColor: '#e33e81',
+          position: 'relative',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+        size="large"
+        onClick={() => {
+          write?.();
+        }}
+        disabled={(isLoading || isStarted) && !isMinted}
+      >
+        Mint
+      </Button>
+      {isLoading && (
+        <div className={styles.status}><br />Waiting for approval...</div>
+      )}
+      {(isStarted && !isMinted) && (
+        <div className={styles.status}><br />Minting...</div>
+      )}
+      {mintData && (
+        <div className={styles.action} style={{ textAlign: 'center' }}>
+          <a
+            href={`https://etherscan.io/tx/${mintData.hash}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <br />View transaction
+          </a>
+        </div>
+      )}
+      {mintError && (
+        <div className={styles.error}>
+          <br />An error occurred while accessing your wallet or
+          processing the transaction.
+        </div>
+      )}
+      {isMinted && (
+        <>
+          <div className={styles.action} style={{ textAlign: 'center' }}>
+            View your minted NFTs on{' '}
+            <a
+              href={`https://opensea.io/${address}?tab=collected`}
+              target="_blank"
+              rel="noreferrer"
+            >
+            OpenSea
+            </a>
+          </div>
+        </>
+      )}
     </>
   );
 }
