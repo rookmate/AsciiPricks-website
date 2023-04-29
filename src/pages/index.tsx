@@ -18,6 +18,7 @@ import contractABI from "abi/contract-abi.json";
 import { success } from "helpers/effects";
 import { useIsMounted } from "./hooks/useIsMounted";
 import { useSaleStatus } from "./hooks/useSaleStatus";
+import { useMint } from "./hooks/useMint";
 
 const PRICE = 0;
 const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
@@ -190,24 +191,41 @@ function Logo() {
 
 function MainContent() {
   const mounted = useIsMounted();
-  const isConnected = useAccount();
+  const { isConnected, address } = useAccount();
   const isSaleActive = useSaleStatus({ contractAddress, contractABI });
+  const canMint = useMint({ contractAddress, contractABI, address });
 
   return (
     <>
       <ConnectButton showBalance={false} />
-      <h1>{
+      <div>{
       mounted ? 
         isConnected ? 
-          isSaleActive ?
-            <p>Sale is active</p>
+          canMint ?
+            isSaleActive ?
+              <div className={styles.action}>
+                Public Sale is active
+              </div>
+            :
+              <div className={styles.action}>
+                Public Sale is not active yet
+              </div>
           :
-            <p>Public Sale is not active yet</p>
+            <div className={styles.action}>
+              This wallet already max minted.<br />View your minted NFTs on{' '}
+              <a
+                href={`https://opensea.io/${address}?tab=collected`}
+                target="_blank"
+                rel="noreferrer"
+              >
+              OpenSea
+              </a>
+            </div>
         : 
           null
       :
         null
-      }</h1>
+      }</div>
     </>
   );
 }
