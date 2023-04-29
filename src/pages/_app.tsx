@@ -18,8 +18,9 @@ const { chains, provider, webSocketProvider } = configureChains(
       apiKey: (process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
       ? process.env.NEXT_PUBLIC_ALCHEMY_GOERLI_API_KEY ?? ""
       : process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? ""),
+      priority: 0,
     }),
-    publicProvider(),
+    publicProvider({ priority: 1 }),
   ]
 );
 
