@@ -8,7 +8,6 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-  useContractRead,
 } from "wagmi";
 import Button from "@mui/material/Button";
 import Slider from "@mui/material/Slider";
@@ -16,10 +15,9 @@ import Slider from "@mui/material/Slider";
 import styles from "./index.module.css";
 import contractABI from "abi/contract-abi.json";
 import { success } from "helpers/effects";
-import { useIsMounted } from "./hooks/useIsMounted";
-import { useSaleStatus } from "./hooks/useSaleStatus";
-import { useMint } from "./hooks/useMint";
-import { relative } from "path";
+import { useIsMounted } from "../hooks/useIsMounted";
+import { useSaleStatus } from "../hooks/useSaleStatus";
+import { useMint } from "../hooks/useMint";
 
 const PRICE = 0;
 const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
