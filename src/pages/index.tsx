@@ -19,8 +19,19 @@ import { useIsMounted } from "../hooks/useIsMounted";
 import { useSaleStatus } from "../hooks/useSaleStatus";
 import { useMint } from "../hooks/useMint";
 
-const PRICE = 0;
-const contractAddress: string = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
+import allowlistWallets from "abi/allowlist.json";
+const { MerkleTree } = require('merkletreejs');
+const keccak256 = require('keccak256');
+
+const contractAddress: string = (process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+                                ? process.env.NEXT_PUBLIC_CONTRACT_GOERLI_ADDRESS ?? ""
+                                : process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "");
+const MINT_FUNCTION: string = "mint";
+const AL_MINT_FUNCTION: string = "alMint";
+
+const leaves = allowlistWallets.map((x: string) => keccak256(x));
+const merkleTree = new MerkleTree(leaves, keccak256);
+const startTime: number = parseInt(process.env.NEXT_PUBLIC_START_TIME ?? '0');
 
 function Home () {
   return (
@@ -76,6 +87,24 @@ function MainContent() {
   const { isConnected, address } = useAccount() ?? { isConnected: false, address: undefined };
   const isSaleActive = useSaleStatus({ contractAddress, contractABI });
   const canMint = useMint({ contractAddress, contractABI, address });
+  const isAddressAllowed = allowlistWallets.includes(`0x${address?.substring(2)}`.toLowerCase());
+  const [diffInMinutes, setDiffInMinutes] = useState(getDiffInMinutes());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDiffInMinutes(getDiffInMinutes());
+    }, 60 * 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  function getDiffInMinutes() {
+    const now = Math.floor(Date.now() / 1000);
+    const diffInSeconds = startTime - now;
+    const diffInMinutes = Math.ceil(diffInSeconds / 60);
+
+    return diffInMinutes;
+  }
 
   return (
     <>
@@ -86,11 +115,17 @@ function MainContent() {
           canMint ?
             isSaleActive ?
               <div className={styles.action}>
-                <Mint canMint={canMint} address={address} funcName="mint"/>
+                <Mint canMint={canMint} address={address} funcName={MINT_FUNCTION}/>
               </div>
             :
+              isAddressAllowed ?
               <div className={styles.action}>
-                Public Sale is not active yet
+                <Mint canMint={canMint} address={address} funcName={AL_MINT_FUNCTION}/>
+              </div>
+              :
+              <div className={styles.action}>
+                Public Sale will be active in {diffInMinutes} minutes.<br />
+                Currently only the Allowlist is minting.
               </div>
           :
             <div className={styles.action}>
@@ -115,17 +150,21 @@ function MainContent() {
 interface MintProps {
   canMint: number | JSX.Element;
   address?: string;
-  funcName?: "mint";
+  funcName?: string;
 }
 
 function Mint({ canMint, address, funcName }: MintProps) {
   const [quantity, setQuantity] = useState<number>(1);
 
+  const contractArgs = funcName === AL_MINT_FUNCTION
+    ? [quantity, merkleTree.getProof(keccak256(address))]
+    : [quantity];
+
   const { config } = usePrepareContractWrite({
     address: `0x${contractAddress.substring(2)}`,
     abi: contractABI,
     functionName: funcName,
-    args: [quantity],
+    args: contractArgs,
     overrides: {
       from: `0x${address?.substring(2)}`,
       value: ethers.utils.parseEther((0).toString()),
