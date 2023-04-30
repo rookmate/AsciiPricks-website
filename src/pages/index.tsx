@@ -29,7 +29,7 @@ const contractAddress: string = (process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "tr
 const MINT_FUNCTION: string = "mint";
 const AL_MINT_FUNCTION: string = "alMint";
 
-const leaves = allowlistWallets.map((x: string) => keccak256(x));
+const leaves = allowlistWallets.map((x: string) => keccak256(x.toLowerCase()));
 const merkleTree = new MerkleTree(leaves, keccak256);
 const startTime: number = parseInt(process.env.NEXT_PUBLIC_START_TIME ?? '0');
 
@@ -156,8 +156,8 @@ interface MintProps {
 function Mint({ canMint, address, funcName }: MintProps) {
   const [quantity, setQuantity] = useState<number>(1);
 
-  const contractArgs = funcName === AL_MINT_FUNCTION
-    ? [quantity, merkleTree.getProof(keccak256(address))]
+  let contractArgs = funcName === AL_MINT_FUNCTION
+    ? [merkleTree.getHexProof(keccak256(address?.toLowerCase())), quantity]
     : [quantity];
 
   const { config } = usePrepareContractWrite({
