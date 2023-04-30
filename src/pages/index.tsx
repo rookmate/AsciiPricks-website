@@ -30,7 +30,10 @@ const MINT_FUNCTION: string = "mint";
 const AL_MINT_FUNCTION: string = "alMint";
 
 const leaves = allowlistWallets.map((x: string) => keccak256(x.toLowerCase()));
-const merkleTree = new MerkleTree(leaves, keccak256);
+const merkleTree = new MerkleTree(leaves, keccak256, {sortPairs: true});
+const merkleRoot = merkleTree.getHexRoot().toString('hex');
+console.log('Merkle Root', merkleRoot);
+
 const startTime: number = parseInt(process.env.NEXT_PUBLIC_START_TIME ?? '0');
 
 function Home () {
