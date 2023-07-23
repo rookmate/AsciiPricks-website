@@ -26,8 +26,11 @@ const loadALOwners = async () => {
   // Combine and remove duplicates
   const owners = Array.from(new Set([...owners1, ...owners2, ...owners3]));
 
+  // Convert owners array to JSON string
+  const ownersJSON = JSON.stringify(owners);
+
   // Write to file
-  fs.writeFileSync("./allowlist.json", owners);
+  fs.writeFileSync("./src/abi/allowlist.json", ownersJSON);
 
   return owners;
 };
