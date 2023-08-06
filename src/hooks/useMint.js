@@ -31,7 +31,7 @@ export function useMint({ contractAddress, contractABI, address }) {
   }
 
   const balance = data[0] ? parseInt(BigNumber.from(data[0]).toString()) : 0;
-  const walletMaxQuantity = data[1] - balance;
+  const walletMaxQuantity = (data[1] - balance) > 0 ? (data[1] - balance) : 0;
   
   return walletMaxQuantity;
 }
