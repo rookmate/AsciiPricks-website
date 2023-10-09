@@ -86,7 +86,7 @@ function Logo() {
 
 
 function MainContent() {
-  const mounted = useIsMounted();
+/*  const mounted = useIsMounted();
   const { isConnected, address } = useAccount() ?? { isConnected: false, address: undefined };
   const isSaleActive = useSaleStatus({ contractAddress, contractABI });
   const canMint = useMint({ contractAddress, contractABI, address });
@@ -107,9 +107,23 @@ function MainContent() {
     const diffInMinutes = Math.ceil(diffInSeconds / 60);
 
     return diffInMinutes;
-  }
+  }*/
 
   return (
+    <div>
+      <p className={styles.price}> The collection is fully minted! Check the full collection on </p> 
+      <div className={styles.fullyminted}>
+        <a
+          href={`https://opensea.io/collection/ascii-pricks`}
+          target="_blank"
+          rel="noreferrer"
+        >
+        OpenSea
+        </a>
+      </div>
+    </div>
+  );
+/*  return (
     <>
       <ConnectButton showBalance={false} />
       <div>{
@@ -147,7 +161,7 @@ function MainContent() {
         null
       }</div>
     </>
-  );
+  );*/
 }
 
 interface MintProps {
